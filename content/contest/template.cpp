@@ -1,14 +1,24 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
-#define rep(i, a, b) for(int i = a; i < (b); ++i)
-#define all(x) begin(x), end(x)
-#define sz(x) (int)(x).size()
-typedef long long ll;
-typedef pair<int, int> pii;
-typedef vector<int> vi;
+using i64 = int64_t;
+using u32 = uint32_t;
+using u64 = uint64_t;
+using usize = size_t;
+using f64 = double;
+using i128 = __int128_t;
+using u128 = __uint128_t;
+
+#define rep(i, a, b) for (int i = (a); i <= (b); ++i)
+#define per(i, a, b) for (int i = (a); i >= (b); --i)
+#define all(a) a.begin(), a.end()
+#define rall(a) a.rbegin(), a.rend()
+#define fi first
+#define se second
 
 int main() {
-	cin.tie(0)->sync_with_stdio(0);
-	cin.exceptions(cin.failbit);
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
+  return 0;
 }
