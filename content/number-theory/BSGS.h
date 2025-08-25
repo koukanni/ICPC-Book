@@ -3,9 +3,9 @@
  * Date: 2020-06-03
  * License: CC0
  * Source: own work
- * Description: Returns the smallest $x > 0$ s.t. $a^x = b \pmod m$, or
- * $-1$ if no such $x$ exists. modLog(a,1,m) can be used to
- * calculate the order of $a$.
+ * Description: Returns the smallest $N$ s.t. $X^N = Y \pmod P$, or
+ * $-1$ if no such $N$ exists. modLog(X,1,P) can be used to
+ * calculate the order of $X$.
  * Time: $O(\sqrt m)$
  * Status: tested for all 0 <= a,x < 500 and 0 < m < 500.
  *
@@ -32,14 +32,53 @@
  */
 #pragma once
 
-ll modLog(ll a, ll b, ll m) {
-	ll n = (ll) sqrt(m) + 1, e = 1, f = 1, j = 1;
-	unordered_map<ll, ll> A;
-	while (j <= n && (e = f = e * a % m) != b % m)
-		A[e * b % m] = j++;
-	if (e == b % m) return j;
-	if (__gcd(m, e) == __gcd(m, b)) 
-		rep(i,2,n+2) if (A.count(e = e * f % m))
-			return n * i - A[e];
-	return -1;
+i64 BSGS(i64 X, i64 Y, i64 P) {
+  X %= P, Y %= P;
+  assert(gcd(X, P) == 1);
+  const i64 B = sqrtl(P) + 1;
+  unordered_map<i64, int> mp;
+  for (i64 i = 0, cur = Y; i <= B; i++) {
+    mp[cur] = i;
+    cur = cur * X % P;
+  }
+  i64 step = 1;
+  rep (i, 1, B) step = step * X % P;
+  for (i64 p = 1, cur = 1; p <= B; p++) {
+    cur = cur * step % P;
+    if (mp.contains(cur)) {
+      return B * p - mp[cur];
+    }
+  }
+  return -1;
+}
+
+i64 exBSGS(i64 X, i64 Y, i64 P) {
+  X %= P, Y %= P;
+  i64 D = 1;
+  int add = 0;
+  while (true) {
+    const auto g = gcd(X, P);
+    if (g == 1) break;
+    if (D == Y) return add;
+    if (Y % g != 0) return -1;
+    Y /= g;
+    P /= g;
+    add++;
+    D = D * (X / g) % P;
+  }
+  const i64 B = sqrtl(P) + 1;
+  unordered_map<i64, int> mp;
+  for (i64 i = 0, cur = Y; i <= B; i++) {
+    mp[cur] = i;
+    cur = cur * X % P;
+  }
+  i64 step = 1;
+  rep (i, 1, B) step = step * X % P;
+  for (i64 p = 1, cur = D; p <= B; p++) {
+    cur = cur * step % P;
+    if (mp.contains(cur)) {
+      return B * p - mp[cur] + add;
+    }
+  }
+  return -1;
 }
